@@ -35,20 +35,20 @@ services:
     env_file:
       - ./.envs/.local/.postgres
 
-  docs:
-    image: smart_ats_local_docs
-    container_name: docs
-    build:
-      context: .
-      dockerfile: ./compose/local/docs/Dockerfile
-    env_file:
-      - ./.envs/.local/.django
-    volumes:
-      - ./docs:/docs:z
-      - ./config:/app/config:z
-      - ./smart_ats:/app/smart_ats:z
-    ports:
-      - "7000:7000"
+  # docs:
+  #   image: smart_ats_local_docs
+  #   container_name: docs
+  #   build:
+  #     context: .
+  #     dockerfile: ./compose/local/docs/Dockerfile
+  #   env_file:
+  #     - ./.envs/.local/.django
+  #   volumes:
+  #     - ./docs:/docs:z
+  #     - ./config:/app/config:z
+  #     - ./smart_ats:/app/smart_ats:z
+  #   ports:
+  #     - "7000:7000"
 
   mailhog:
     image: mailhog/mailhog:v1.0.0
