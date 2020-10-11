@@ -1,6 +1,7 @@
 from django.conf import settings
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
+from smart_ats.companies.api.views import CompanyViewSet
 from smart_ats.users.api.views import UserViewSet
 
 if settings.DEBUG:
@@ -9,6 +10,7 @@ else:
     router = SimpleRouter()
 
 router.register("users", UserViewSet)
+router.register("companies", CompanyViewSet)
 
 
 app_name = "api"
