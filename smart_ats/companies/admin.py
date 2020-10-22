@@ -55,6 +55,8 @@ class CompanyAdmin(admin.ModelAdmin):
 
     search_fields = ("name__icontains", )
 
+    readonly_fields = ('created','modified')
+
     inlines = (StackedCompanyAdmin,)
 
 
