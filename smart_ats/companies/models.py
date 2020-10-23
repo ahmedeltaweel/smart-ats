@@ -13,6 +13,7 @@ class Company(TimeStampedModel):
     website = models.URLField(blank=False, null=False)
     description = models.TextField(blank=True, null=True)
     address = models.TextField(blank=False, null=False)
+    logo = models.ImageField()
 
     def __str__(self):
         return self.name
