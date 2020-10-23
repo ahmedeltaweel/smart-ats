@@ -9,10 +9,9 @@ from .managers import CompanyAdminManager
 class CompanyAdmin(User):
     company = models.ForeignKey("companies.Company", on_delete=models.CASCADE)
 
-    objects = CompanyAdminManager()
-
-    def __str__(self):
-        return "Admin for: {}".format(self.company.name)
+    class Meta:
+        verbose_name = "Company Admin"
+        verbose_name_plural = "Company Admins"
 
 
 class Company(TimeStampedModel):
@@ -20,7 +19,11 @@ class Company(TimeStampedModel):
     website = models.URLField(blank=False, null=False)
     description = models.TextField(blank=True, null=True)
     address = models.TextField(blank=False, null=False)
-    logo = models.ImageField()
+    logo = models.ImageField(upload_to='static/images/company logos')
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Company"
+        verbose_name_plural = "Companies"
