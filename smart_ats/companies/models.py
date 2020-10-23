@@ -3,9 +3,16 @@ from model_utils.models import TimeStampedModel
 
 from smart_ats.users.models import User
 
+from .managers import CompanyAdminManager
+
 
 class CompanyAdmin(User):
     company = models.ForeignKey("companies.Company", on_delete=models.CASCADE)
+
+    objects = CompanyAdminManager()
+
+    def __str__(self):
+        return "Admin for: {}".format(self.company.name)
 
 
 class Company(TimeStampedModel):
