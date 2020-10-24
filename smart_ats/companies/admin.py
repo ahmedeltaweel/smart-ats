@@ -72,3 +72,4 @@ class CompanyAdmin(admin.ModelAdmin):
         return format_html(f"<a href='{url}'>company admins</a>")        
     
     Company_Admin.short_description = "Company Admins"
+
