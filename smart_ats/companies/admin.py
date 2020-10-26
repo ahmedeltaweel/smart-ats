@@ -8,7 +8,7 @@ from .models import Company, CompanyAdmin
 
 
 @admin.register(CompanyAdmin)
-class CompanyAdminSite(UserAdmin):
+class CompanyAdminAdmin(UserAdmin):
     list_display = ["username", "email", "company"]
 
     fieldsets = (
