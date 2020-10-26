@@ -9,8 +9,6 @@ from .models import Company, CompanyAdmin
 
 @admin.register(CompanyAdmin)
 class CompanyAdminSite(UserAdmin):
-    model = CompanyAdmin
-
     list_display = ["username", "email", "company"]
 
     fieldsets = (
@@ -77,9 +75,7 @@ class StackedCompanyAdmin(admin.TabularInline):
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    model = Company
-
-    list_display = ("id", "name", "Comapany_website", "Company_Admin", "is_active")
+    list_display = ("id", "name", "comapany_website", "company_admin", "is_active")
 
     list_filter = ("is_active",)
 
@@ -89,10 +85,10 @@ class CompanyAdmin(admin.ModelAdmin):
 
     inlines = (StackedCompanyAdmin,)
 
-    def Comapany_website(self, obj):
+    def comapany_website(self, obj):
         return format_html(f'<a href="{obj.website}">Website</a>')
 
-    def Company_Admin(self, obj):
+    def company_admin(self, obj):
         url = str(
             reverse("admin:companies_companyadmin_changelist")
             + "?"
@@ -101,4 +97,4 @@ class CompanyAdmin(admin.ModelAdmin):
 
         return format_html(f"<a href='{url}'>company admins</a>")
 
-    Company_Admin.short_description = "Company Admins"
+    company_admin.short_description = "Company Admins"
