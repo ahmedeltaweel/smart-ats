@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.http import urlencode
 
+from smart_ats.users.models import User
+
 from .models import Company, CompanyAdmin
 
 
@@ -59,7 +61,7 @@ class CompanyAdminAdmin(UserAdmin):
     )
 
     def save_model(self, request, obj, form, change):
-        obj.user_type = "admin"
+        obj.user_type = User.STATUSES.admin
         super().save_model(request, obj, form, change)
 
 

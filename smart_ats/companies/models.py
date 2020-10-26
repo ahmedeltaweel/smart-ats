@@ -8,7 +8,7 @@ from .managers import CompanyAdminManager
 
 class CompanyAdmin(User):
     company = models.ForeignKey(
-        "companies.Company", on_delete=models.CASCADE, related_name="admins"
+        "companies.Company", on_delete=models.CASCADE, related_name="company_admins"
     )
 
     class Meta:
