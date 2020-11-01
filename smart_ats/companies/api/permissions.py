@@ -15,4 +15,4 @@ class IsCompanyAdminOrReadOnly(permissions.BasePermission):
         if request.method == "POST" and not obj:
             return True
         # update, delete
-        return obj.company_admin == request.user.companyadmin
+        return request.user.companyadmin in obj.company_admin.all()
