@@ -1,9 +1,5 @@
 from rest_framework import permissions
 
-# make sure user is a registered user in listing GET
-# make sure user is company admin in creation.
-# make sure user is company admin and i linked to company on update and delete.
-
 
 class IsCompanyAdminOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
