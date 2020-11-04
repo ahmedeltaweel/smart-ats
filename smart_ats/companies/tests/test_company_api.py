@@ -28,6 +28,10 @@ class CompanyAdminTestCase(APITestCase):
     def test_company_list_authenticated(self):
         response = self.client.get("/api/companies/", content_type="application/json")
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data[0]["name"], "Elsaeed")
+        self.assertEqual(response.data[0]["address"], "Mansoura")
+        self.assertEqual(response.data[0]["description"], "Bla Company")
+        self.assertEqual(response.data[0]["website"], "http://elsaeed.com")
 
     def test_company_list_unauthenticated(self):
         client = APIClient()
