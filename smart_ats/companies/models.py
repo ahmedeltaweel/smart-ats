@@ -19,7 +19,7 @@ class CompanyAdmin(User):
 
 
 class Company(TimeStampedModel):
-    name = models.CharField(max_length=15, blank=False, null=False)
+    name = models.CharField(max_length=15, unique=True, blank=False, null=False)
     website = models.URLField(blank=False, null=False)
     description = models.TextField(blank=True, null=True)
     address = models.TextField(blank=False, null=False)
