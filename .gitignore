@@ -330,3 +330,5 @@ smart_ats/media/
 .env
 .envs/*
 !.envs/.local/
+
+.vscode
