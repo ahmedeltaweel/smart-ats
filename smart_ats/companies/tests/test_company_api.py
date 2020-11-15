@@ -1,10 +1,13 @@
 import json
 
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient, APITestCase
 
 from smart_ats.companies.models import Company, CompanyAdmin
+
+User = get_user_model()
 
 
 class CompanyAdminTestCase(APITestCase):
@@ -90,7 +93,7 @@ class CompanyAdminTestCase(APITestCase):
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_company_update_by_companyadmin(self):
+    def test_company_partial_update_by_companyadmin(self):
         response = self.client.patch(
             "{}{}/".format(self._api_path, self.company.id),
             data=json.dumps({"name": "Hamada", "address": "Cairo"}),
@@ -101,7 +104,7 @@ class CompanyAdminTestCase(APITestCase):
         self.assertEqual(response["name"], "Hamada")
         self.assertEqual(response["address"], "Cairo")
 
-    def test_company_update_by_ananymous(self):
+    def test_company_partial_update_by_ananymous(self):
         client = APIClient()
         response = client.patch(
             "{}{}/".format(self._api_path, self.company.id),
@@ -130,6 +133,62 @@ class CompanyAdminTestCase(APITestCase):
         self.assertEqual(response["website"], "http://djangoproject.com")
         self.assertEqual(response["description"], "dj project")
 
+    def test_company_full_update_by_companyadmin_with_missing_name(self):
+        response = self.client.put(
+            "{}{}/".format(self._api_path, self.company.id),
+            data=json.dumps(
+                {
+                    "address": "Mansoura",
+                    "website": "http://mansoura.com",
+                    "description": "bla bla",
+                }
+            ),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_company_full_update_by_companyadmin_with_missing_address(self):
+        response = self.client.put(
+            "{}{}/".format(self._api_path, self.company.id),
+            data=json.dumps(
+                {
+                    "name": "Mansoura",
+                    "website": "http://mansoura.com",
+                    "description": "bla bla",
+                }
+            ),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_company_full_update_by_companyadmin_with_missing_website(self):
+        response = self.client.put(
+            "{}{}/".format(self._api_path, self.company.id),
+            data=json.dumps(
+                {
+                    "name": "Python Inc",
+                    "address": "Mansoura",
+                    "description": "bla bla",
+                }
+            ),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_company_full_update_by_companyadmin_with_missing_description(self):
+        response = self.client.put(
+            "{}{}/".format(self._api_path, self.company.id),
+            data=json.dumps(
+                {
+                    "name": "GO",
+                    "address": "Mansoura",
+                    "website": "http://mansoura.com",
+                }
+            ),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+
     def test_company_full_update_by_ananymous(self):
         client = APIClient()
         response = client.put(
@@ -149,6 +208,15 @@ class CompanyAdminTestCase(APITestCase):
     def test_company_delete_by_companyadmin(self):
         response = self.client.delete("{}{}/".format(self._api_path, self.company.id))
         self.assertEqual(response.status_code, 204)
+
+    def test_company_delete_by_normal_user(self):
+        user = User.objects.create_user(
+            username="test", email="test@email.com", password="testpass"
+        )
+        token = Token.objects.get_or_create(user=user)
+        user = APIClient(HTTP_AUTHORIZATION="Token " + token[0].key)
+        response = user.delete("{}{}/".format(self._api_path, self.company.id))
+        self.assertEqual(response.status_code, 403)
 
     def test_company_delete_by_ananymous(self):
         client = APIClient()
