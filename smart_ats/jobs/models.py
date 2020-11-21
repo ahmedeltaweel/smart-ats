@@ -1,29 +1,26 @@
 from django.db import models
+from model_utils import Choices
+from django.utils.translation import gettext_lazy as _
+from model_utils.models import TimeStampedModel
 from smart_ats.companies.models import *
 from taggit.managers import TaggableManager
-# Create your models here.
-
-class Tag(models.Model):
-    #name=models.CharField(max_length = 200,null=True)
-    name=TaggableManager();
-
-class Category(models.Model):
-    title =models.CharField(max_length = 200,null=True)
 
 
-class Job(models.Model):
-	STATUS=(
-		('Active','Active'),
-		('Draft','Draft'),
-		('Archived','Archived'),
-		)
-	title=models.CharField(max_length = 200,null=True)
-	description=models.CharField(max_length = 200,null=True,blank=True)
-	category_id=models.ForeignKey(Category,null=True,on_delete=models.SET_NULL)
-	company_id=models.ForeignKey(Company,null=True,on_delete=models.SET_NULL)
-	Author_id=models.ForeignKey(CompanyAdmin,null=True,on_delete=models.SET_NULL)
-	status=models.CharField(max_length = 200, null=True, choices=STATUS)
-	tags=models.ManyToManyField("Tag")
-	def __str__(self):
-		return self.name 
+class Category(TimeStampedModel):
+    title = models.CharField(max_length=30,db_index=True)
+
+
+class Job(TimeStampedModel):
+    STATUS = Choices(('Active', _('Active')),('Draft', _('Draft')),('Archived', _('Archived')))
+      
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    author = models.ForeignKey(CompanyAdmin, on_delete=models.CASCADE, default=1)
+    status = models.CharField(max_length=15, choices=STATUS, default=STATUS.Archived)
+    tags = TaggableManager()
+
+    def __str__(self):
+        return self.name
 
