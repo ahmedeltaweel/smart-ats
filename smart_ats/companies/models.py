@@ -7,7 +7,9 @@ from .managers import CompanyAdminManager
 
 
 class CompanyAdmin(User):
-    company = models.ForeignKey("companies.Company", on_delete=models.CASCADE)
+    company = models.ForeignKey(
+        "companies.Company", on_delete=models.CASCADE, related_name="company_admin"
+    )
 
     class Meta:
         verbose_name = "Company Admin"
