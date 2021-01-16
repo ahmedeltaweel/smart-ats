@@ -6,6 +6,8 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
 
+from smart_ats.notifications.ui import send_notification
+
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
@@ -48,6 +50,8 @@ if settings.DEBUG:
             kwargs={"exception": Exception("Page not Found")},
         ),
         path("500/", default_views.server_error),
+        # dummy
+        path("notification/<username>/", send_notification),
     ]
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
