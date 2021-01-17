@@ -1,36 +1,30 @@
 from django.http import HttpResponse
 
 from .core import EmailNotification, SmsNotification
-from .service import Methods, NotificationContent, NotificationContentConstructorService
+from .service import NotificationContent, NotificationContentConstructorService
+from .templates import EmailTemplates, SMSTemplates
 
 
 class Notification:
     def __init__(self, content: NotificationContent):
-        self.content, self.method = NotificationContentConstructorService(
+        self.content = NotificationContentConstructorService(
             content
         ).construct_notification()
 
-    def _sms(self) -> None:
+    def sms(self) -> None:
         SmsNotification.send(self.content)
 
-    def _email(self) -> None:
+    def email(self) -> None:
         EmailNotification.send(self.content)
-
-    def notify(self) -> None:
-        if self.method == Methods.sms:
-            self._sms()
-        elif self.method == Methods.email:
-            self._email()
 
 
 def send_notification(request, username: str) -> HttpResponse:
     Notification(
         NotificationContent(
             context={"receiver_name": username},
-            template_name="base",
-            method=Methods.sms,
+            template=EmailTemplates.BASE,
         )
-    ).notify()
+    ).email()
     return HttpResponse("notification is sent")
 
 
