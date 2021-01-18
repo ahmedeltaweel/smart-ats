@@ -43,6 +43,13 @@ LOCALE_PATHS = [str(ROOT_DIR / "locale")]
 DATABASES = {"default": env.db("DATABASE_URL")}
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
+
+# ELASTICSEARCH
+# ------------------------------------------------------------------------------
+ELASTICSEARCH_DSL = {
+    "default": {"hosts": env("ELASTICSEARCH_URL")},
+}
+
 # URLS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
@@ -72,6 +79,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
+    "django_elasticsearch_dsl",
 ]
 
 LOCAL_APPS = [
