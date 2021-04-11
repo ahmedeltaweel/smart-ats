@@ -80,7 +80,7 @@ LOCAL_APPS = [
     "smart_ats.users.apps.UsersConfig",
     "smart_ats.companies.apps.CompaniesConfig",
     "smart_ats.jobs.apps.JobsConfig",
-
+    "smart_ats.notifications.apps.NotificationConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
