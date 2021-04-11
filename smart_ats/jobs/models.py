@@ -5,9 +5,11 @@ from model_utils.models import TimeStampedModel
 from smart_ats.companies.models import Company, CompanyAdmin
 from taggit.managers import TaggableManager
 
+from .managers import JobManager
+
 
 class Category(TimeStampedModel):
-    title = models.CharField(max_length=30, db_index=True)
+    name = models.CharField(max_length=30, db_index=True)
 
 
 class Job(TimeStampedModel):
@@ -18,8 +20,10 @@ class Job(TimeStampedModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     author = models.ForeignKey(CompanyAdmin, on_delete=models.CASCADE)
-    status = models.CharField(max_length=15, choices=STATUS, default=STATUS.Archived)
+    status = models.CharField(max_length=15, choices=STATUS, default=STATUS.Draft)
     tags = TaggableManager()
 
+    objects = JobManager()
+
     def __str__(self):
-        return f'{self.name} {self.company.name} {self.author.name}'
+        return f'{self.title} {self.company.name} {self.author.first_name}'
