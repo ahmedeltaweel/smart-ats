@@ -16,6 +16,7 @@ services:
     depends_on:
       - postgres
       - mailhog
+      - elasticsearch
     volumes:
       - .:/app:z
     env_file:
@@ -109,8 +110,8 @@ services:
       - es-data:/usr/share/elasticsearch/data
     # command to limit logging messages of starting service
     command: ["elasticsearch", "-Elogger.level=WARN"]
-    ports:
-      - 9200:9200
+    expose:
+      - 9200
     networks:
       - elastic
 
