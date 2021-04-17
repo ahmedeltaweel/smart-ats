@@ -12,39 +12,41 @@ from django_fsm import FSMField, transition
 
 
 class Category(MPTTModel):
-    name = models.CharField(max_length=30, db_index=True)
-    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='Children')
+    name = models.CharField(max_length=30, unique=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
 
     class MPTTMeta:
         order_insertion_by = ['name']
 
     def __str__(self):
-        return Category.name
+        return self.name
 
 
-STATUS = ('Active', 'Draft', 'Archived')
-STATUS = list(zip(STATUS, STATUS))
 class Job(TimeStampedModel):
+
+    STATUS = Choices(
+        ('DRAFT', _('Draft')),
+        ('ACTIVE', _('Active')),
+        ('ARCHIVED', _('Archived')),
+    )
 
     title = models.CharField(max_length=100)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     author = models.ForeignKey(CompanyAdmin, on_delete=models.CASCADE)
+    state = FSMField(default=STATUS.DRAFT, choices=STATUS)
+
     tags = TaggableManager()
-
     objects = JobManager()
-    state = FSMField(default=STATUS[1], choices=STATUS)
 
-    @transition(field=state, source='Draft', target='Active')
-    def start(self):
-
-        pass
-    @transition(field=state, source='Active', target='Archived')
-    def start(self):
-
+    @transition(field=state, source=STATUS.DRAFT, target=STATUS.ACTIVE)
+    def activate(self):
         pass
 
+    @transition(field=state, source='*', target=STATUS.ARCHIVED)
+    def archive(self):
+        pass
 
     def __str__(self):
         return f'{self.title} {self.company.name} {self.author.first_name}'

@@ -23,5 +23,5 @@ class JobFactory(DjangoModelFactory):
     category = factory.SubFactory(CategoryFactory)
     company = factory.SubFactory(CompanyFactory)
     author = factory.SubFactory(CompanyAdminFactory)
-    status = 'Draft'
+    state = Job.STATUS.DRAFT
     tags = ','.join([f'{x}_tag' for x in range(3)])
