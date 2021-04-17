@@ -4,14 +4,22 @@ from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 from smart_ats.companies.models import Company, CompanyAdmin
 from taggit.managers import TaggableManager
+from mptt.models import MPTTModel, TreeForeignKey
 
 from .managers import JobManager
 
 from django_fsm import FSMField, transition
 
 
-class Category(TimeStampedModel):
+class Category(MPTTModel):
     name = models.CharField(max_length=30, db_index=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='Children')
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    def __str__(self):
+        return Category.name
 
 
 STATUS = ('Active', 'Draft', 'Archived')
