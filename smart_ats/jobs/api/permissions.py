@@ -1,5 +1,4 @@
 from rest_framework import permissions
-from smart_ats.jobs.models import Job
 
 from smart_ats.companies.models import Company
 

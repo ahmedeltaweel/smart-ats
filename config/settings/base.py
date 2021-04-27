@@ -62,7 +62,7 @@ DJANGO_APPS = [
     # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
     "django.forms",
-
+    "taggit_serializer",
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
@@ -75,7 +75,6 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "taggit",
     "django_fsm",
-
 ]
 
 LOCAL_APPS = [
@@ -84,7 +83,6 @@ LOCAL_APPS = [
     "smart_ats.jobs.apps.JobsConfig",
     "smart_ats.notifications.apps.NotificationConfig",
     "mptt",
-
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
