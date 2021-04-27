@@ -13,7 +13,7 @@ class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
     permission_classes = (IsAuthenticated, IsJobCompanyAdminOrReadOnly)
 
-    def get_serializer(self):
+    def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
             return JobSerializer
         elif self.action in ["create", "update"]:
