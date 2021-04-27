@@ -1,10 +1,24 @@
 from rest_framework import permissions
 from smart_ats.jobs.models import Job
 
-class UpdateOwnJob(permissions.BasePermission):
-    
-    def has_object_permission(self, request, view, obj):
-        
+from smart_ats.companies.models import Company
+
+class IsJobCompanyAdminOrReadOnly(permissions.BasePermission):
+    def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return obj.id == request.user.id
+        if not hasattr(request.user, "companyadmin"):
+            return False
+        if request.method == "POST":
+            return (
+                request.user.companyadmin
+                in CompanyAdmin.objects.filter(
+                    company_id=request.POST["company"]
+                )
+            )
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return request.user.companyadmin in obj.company.company_admin.all()
+           
+

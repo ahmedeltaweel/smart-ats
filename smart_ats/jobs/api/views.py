@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 
 from smart_ats.jobs.models import Job
 
-from .permissions import UpdateOwnJob
+from .permissions import IsJobCompanyAdminOrReadOnly
 from .serializers import JobSerializer
 
 
@@ -12,7 +12,7 @@ class JobViewSet(viewsets.ModelViewSet):
     serializer_class = JobSerializer
     queryset = Job.objects.all()
     permission_classes = (
-        UpdateOwnJob,
+        IsJobCompanyAdminOrReadOnly,
         IsAuthenticated
         )
    
