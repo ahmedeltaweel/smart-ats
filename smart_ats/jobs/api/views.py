@@ -1,16 +1,17 @@
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 from smart_ats.jobs.models import Job
+
 from .permissions import IsJobCompanyAdminOrReadOnly
 from .serializers import JobSerializer, JobWriterSerializer
-from rest_framework.decorators import action
-from rest_framework.response import Response
 
 
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
-    permission_classes = (
-        IsJobCompanyAdminOrReadOnly
-        )
+    permission_classes = (IsAuthenticated, IsJobCompanyAdminOrReadOnly)
 
     def get_serializer(self):
         if self.action in ["list", "retrieve"]:
