@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from smart_ats.companies.models import Company
+from smart_ats.companies.models import CompanyAdmin
 
 class IsJobCompanyAdminOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
