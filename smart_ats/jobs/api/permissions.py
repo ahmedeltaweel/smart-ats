@@ -1,6 +1,7 @@
 from rest_framework import permissions
 
-from smart_ats.companies.models import Company
+from smart_ats.companies.models import CompanyAdmin
+
 
 class IsJobCompanyAdminOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -9,15 +10,7 @@ class IsJobCompanyAdminOrReadOnly(permissions.BasePermission):
         if not hasattr(request.user, "companyadmin"):
             return False
         if request.method == "POST":
-            return (
-                request.user.companyadmin
-                in CompanyAdmin.objects.filter(
-                    company_id=request.POST["company"]
-                )
+            return request.user.companyadmin in CompanyAdmin.objects.filter(
+                company_id=request.POST["company"]
             )
         return True
-
-    def has_object_permission(self, request, view, obj):
-        return request.user.companyadmin in obj.company.company_admin.all()
-           
-

@@ -62,7 +62,6 @@ DJANGO_APPS = [
     # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
     "django.forms",
-    "taggit_serializer",
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
@@ -75,6 +74,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "taggit",
     "django_fsm",
+    "taggit_serializer",
 ]
 
 LOCAL_APPS = [
