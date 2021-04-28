@@ -1,16 +1,19 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from smart_ats.jobs.models import Job
+from smart_ats.companies.models import Company
 
 from .permissions import IsJobCompanyAdminOrReadOnly
 from .serializers import JobSerializer, JobWriterSerializer
 
 
 class JobViewSet(viewsets.ModelViewSet):
-    queryset = Job.objects.all()
     permission_classes = (IsJobCompanyAdminOrReadOnly,)
+
+    def get_queryset(self):
+        return get_object_or_404(Company, id=self.kwargs["company_id"]).job_set.all()
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:

@@ -9,8 +9,6 @@ class IsJobCompanyAdminOrReadOnly(permissions.BasePermission):
             return True
         if not hasattr(request.user, "companyadmin"):
             return False
-        if request.method == "POST":
-            return request.user.companyadmin in CompanyAdmin.objects.filter(
-                company_id=request.POST["company"]
-            )
-        return True
+        return request.user.companyadmin in CompanyAdmin.objects.filter(
+            company_id=view.kwargs["company_id"]
+        )
