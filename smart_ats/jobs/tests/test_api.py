@@ -1,8 +1,11 @@
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient, APITestCase
+from django.contrib.auth import get_user_model
 
 from .factories import JobFactory
+
+User = get_user_model()
 
 
 class JobAPITestCase(APITestCase):
@@ -27,3 +30,21 @@ class JobAPITestCase(APITestCase):
         self.assertEqual(response.data[0]["description"], self.job.description)
         self.assertEqual(response.data[0]["category"], f"{self.job.category}")
         self.assertEqual(response.data[0]["state"], self.job.state)
+
+    def test_delete_job_unauthenticated(self):
+        client = APIClient()
+        response = client.delete(self.api_path, content_type="application/json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_job_company_admin(self):
+        response = self.client.delete(f"{self.api_path}", content_type="application/json")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_job_normal_user(self):
+        user = User.objects.create_user(
+            username="hamada", email="hamada@mail.com", password="hamadapass"
+        )
+        token = Token.objects.get_or_create(user=user)
+        user = APIClient(HTTP_AUTHORIZATION="Token " + token[0].key)
+        response = user.delete(f"{self.api_path}", content_type="application/json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
