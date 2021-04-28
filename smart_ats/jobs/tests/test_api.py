@@ -1,10 +1,11 @@
+import json
+
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient, APITestCase
-from django.contrib.auth import get_user_model
 
-from .factories import JobFactory
-from smart_ats.companies.tests.factories import CompanyFactory
+from .factories import CategoryFactory, JobFactory
 
 User = get_user_model()
 
@@ -14,7 +15,7 @@ class JobAPITestCase(APITestCase):
         self.job = JobFactory.create()
         token = Token.objects.get_or_create(user=self.job.author)
         self.client = APIClient(HTTP_AUTHORIZATION="Token " + token[0].key)
-        self.api_path = "/api/jobs/"
+        self.api_path = f"/api/v1/{self.job.company_id}/jobs/"
 
     def test_jobs_list_authenticated(self):
         response = self.client.get(f"{self.api_path}", content_type="application/json")
@@ -38,7 +39,9 @@ class JobAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_delete_job_company_admin(self):
-        response = self.client.delete(f"{self.api_path}", content_type="application/json")
+        response = self.client.delete(
+            f"{self.api_path}", content_type="application/json"
+        )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_delete_job_normal_user(self):
@@ -74,13 +77,13 @@ class JobAPITestCase(APITestCase):
             "title": "title1",
             "description": "temp",
             "category": category.id,
-            "company": self.job.company.id,
+            "company": self.job.company_id,
             "author": "name",
             "state": "DRAFT",
             "tags": "",
         }
         response = self.client.post(
-            "{}".format(self._api_path),
+            "{}".format(self.api_path),
             data=json.dumps(data),
             content_type="application/json",
         )
@@ -105,13 +108,30 @@ class JobAPITestCase(APITestCase):
         }
         client = APIClient()
         response = client.post(
-            "{}".format(self._api_path),
+            "{}".format(self.api_path),
             data=json.dumps(data),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 403)
 
-            
+    def test_job_update_by_admin(self):
+        data = {"title": "udated title"}
 
+        response = self.client.patch(
+            f"{self.api_path}{self.Job.id}/",
+            data=json.dumps(data),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["title"], data["title"])
 
+    def test_job_update_by_ananumous(self):
+        data = {"title": "udated title"}
 
+        client = APIClient()
+        response = client.patch(
+            f"{self.api_path}{self.Job.id}/",
+            data=json.dumps(data),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 403)
