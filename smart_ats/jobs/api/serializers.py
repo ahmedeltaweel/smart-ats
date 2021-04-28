@@ -1,20 +1,9 @@
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from taggit_serializer.serializers import TaggitSerializer, TagListSerializerField
 
 from smart_ats.companies.models import Company
 from smart_ats.jobs.models import Category, Job
-
-User = get_user_model()
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            "id",
-            "username",
-        ]
+from smart_ats.users.api.serializers import SimpleUserSerializer
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -32,8 +21,8 @@ class CompanySerializer(serializers.ModelSerializer):
 class JobSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     company = CompanySerializer(many=False)
-    category = CategorySerializer(many=False, read_only=True)
-    author = UserSerializer(many=False)
+    category = CategorySerializer(many=False)
+    author = SimpleUserSerializer(many=False)
 
     class Meta:
         model = Job

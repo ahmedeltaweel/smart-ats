@@ -9,7 +9,7 @@ else:
     router = SimpleRouter()
 
 
-router.register("jobs", JobViewSet, "jobs")
+router.register(r"companies/(?P<company_id>\d+)/jobs", JobViewSet, "jobs")
 
 app_name = "jobs"
 urlpatterns = router.urls
