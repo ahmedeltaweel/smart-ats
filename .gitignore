@@ -328,3 +328,6 @@ smart_ats/media/
 !.envs/.local/
 
 .vscode
+
+Makefile
+local1.yml

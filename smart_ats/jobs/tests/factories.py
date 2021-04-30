@@ -2,7 +2,8 @@ import factory
 from factory.django import DjangoModelFactory
 
 from smart_ats.companies.tests.factories import CompanyAdminFactory, CompanyFactory
-from smart_ats.jobs.models import Category, Job
+from smart_ats.jobs.models import Category, Job, JobApplication
+from smart_ats.users.tests.factories import UserFactory
 
 
 class CategoryFactory(DjangoModelFactory):
@@ -26,3 +27,18 @@ class JobFactory(DjangoModelFactory):
     )
     state = Job.STATUS.DRAFT
     tags = ",".join([f"{x}_tag" for x in range(3)])
+
+
+class JobApplicationFactory(DjangoModelFactory):
+    class Meta:
+        model = JobApplication
+
+    user = factory.SubFactory(UserFactory)
+    job = factory.SubFactory(JobFactory)
+    state = JobApplication.STATUS.DRAFT
+    data = {
+        "name": "Hamada",
+        "adress": "Hamada Second Floor",
+        "skills": ["python", "django", "postgres", "docker"],
+    }
+    cv_url = factory.Faker("url")
