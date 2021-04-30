@@ -1,9 +1,8 @@
-
 import factory
 from factory.django import DjangoModelFactory
 
+from smart_ats.companies.tests.factories import CompanyAdminFactory, CompanyFactory
 from smart_ats.jobs.models import Category, Job
-from smart_ats.companies.tests.factories import CompanyFactory, CompanyAdminFactory
 
 
 class CategoryFactory(DjangoModelFactory):
@@ -22,6 +21,8 @@ class JobFactory(DjangoModelFactory):
     description = factory.Faker("catch_phrase")
     category = factory.SubFactory(CategoryFactory)
     company = factory.SubFactory(CompanyFactory)
-    author = factory.SubFactory(CompanyAdminFactory)
+    author = factory.SubFactory(
+        CompanyAdminFactory, company=factory.SelfAttribute("..company")
+    )
     state = Job.STATUS.DRAFT
-    tags = ','.join([f'{x}_tag' for x in range(3)])
+    tags = ",".join([f"{x}_tag" for x in range(3)])

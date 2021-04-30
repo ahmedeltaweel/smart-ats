@@ -20,9 +20,9 @@ class CompanySerializer(serializers.ModelSerializer):
 
 class JobSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
-    company = CompanySerializer(many=False)
-    category = CategorySerializer(many=False)
-    author = SimpleUserSerializer(many=False)
+    company = CompanySerializer()
+    category = CategorySerializer()
+    author = SimpleUserSerializer()
 
     class Meta:
         model = Job
