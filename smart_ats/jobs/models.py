@@ -1,11 +1,14 @@
+
+
 from django.db import models
 from model_utils import Choices
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 from smart_ats.companies.models import Company, CompanyAdmin
+from smart_ats.users.models import User
 from taggit.managers import TaggableManager
 from mptt.models import MPTTModel, TreeForeignKey
-
+from django.contrib.postgres.fields import JSONField
 from .managers import JobManager
 
 from django_fsm import FSMField, transition
@@ -50,3 +53,36 @@ class Job(TimeStampedModel):
 
     def __str__(self):
         return f'{self.title} {self.company.name} {self.author.first_name}'
+
+class JobApplication(TimeStampedModel):
+
+    STATUS = Choices(
+        ('DRAFT', _('Draft')),
+        ('ACTIVE', _('Active')),
+        ('SHORTLISTED',_('Short-listed')),
+        ('REJECTED',_('Rejected')),
+        ('ARCHIVED', _('Archived')),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    state = FSMField(default=STATUS.DRAFT, choices=STATUS)
+    data = JSONField()
+    cv_url = models.URLField(max_length=100)
+
+    @transition(field=state, source=STATUS.DRAFT, target=STATUS.ACTIVE)
+    def activate(self):
+        pass
+
+    @transition(field=state, source=STATUS.ACTIVE, target=['Short-listed','Rejected','Archived'])
+    def phase2(self):
+        pass
+
+    @transition(field=state, source=STATUS.SHORTLISTED, target=[STATUS.REJECTED,STATUS.ARCHIVED])
+    def phase3(self):
+        pass
+
+    @transition(field=state, source=STATUS.REJECTED, target=STATUS.ARCHIVED)
+    def archive(self):
+        pass
+
