@@ -1,5 +1,3 @@
-
-
 from django.db import models
 from model_utils import Choices
 from django.utils.translation import gettext_lazy as _
@@ -74,7 +72,7 @@ class JobApplication(TimeStampedModel):
     def activate(self):
         pass
 
-    @transition(field=state, source=STATUS.ACTIVE, target=['Short-listed','Rejected','Archived'])
+    @transition(field=state, source=STATUS.ACTIVE, target=[STATUS.SHORTLISTED,STATUS.REJECTED,STATUS.ARCHIVED])
     def phase2(self):
         pass
 
