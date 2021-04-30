@@ -2,7 +2,7 @@ from rest_framework import serializers
 from taggit_serializer.serializers import TaggitSerializer, TagListSerializerField
 
 from smart_ats.companies.models import Company
-from smart_ats.jobs.models import Category, Job
+from smart_ats.jobs.models import Category, Job, JobApplication
 from smart_ats.users.api.serializers import SimpleUserSerializer
 
 
@@ -53,3 +53,31 @@ class JobWriterSerializer(TaggitSerializer, serializers.ModelSerializer):
             "state",
             "tags",
         ]
+
+
+class JobApplicationSerializer(serializers.ModelSerializer):
+    user = SimpleUserSerializer()
+
+    class Meta:
+        model = JobApplication
+        fields = [
+            "user",
+            "job",
+            "state",
+            "data",
+            "cv_url",
+        ]
+
+
+class JobApplicationWriterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobApplication
+        fields = [
+            "user",
+            "job",
+            "state",
+            "data",
+            "cv_url",
+        ]
+
+
