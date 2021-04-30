@@ -57,6 +57,7 @@ class JobWriterSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 class JobApplicationSerializer(serializers.ModelSerializer):
     user = SimpleUserSerializer()
+    job = JobSerializer()
 
     class Meta:
         model = JobApplication
