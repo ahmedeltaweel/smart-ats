@@ -1,4 +1,5 @@
 import factory
+import factory.fuzzy
 from factory.django import DjangoModelFactory
 
 from smart_ats.companies.tests.factories import CompanyAdminFactory, CompanyFactory
@@ -35,10 +36,10 @@ class JobApplicationFactory(DjangoModelFactory):
 
     user = factory.SubFactory(UserFactory)
     job = factory.SubFactory(JobFactory)
-    state = JobApplication.STATUS.DRAFT
+    state = factory.fuzzy.FuzzyChoice(JobApplication.STATUS)
     data = {
-        "name": "Hamada",
-        "adress": "Hamada Second Floor",
-        "skills": ["python", "django", "postgres", "docker"],
+        "name": "{}".format(factory.Faker("name")),
+        "adress": "{}".format(factory.Faker("address")),
+        "LinkedIn": "{}".format(factory.Faker("url")),
     }
     cv_url = factory.Faker("url")
