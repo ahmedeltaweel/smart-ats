@@ -24,7 +24,7 @@ urlpatterns = [
 # API URLS
 urlpatterns += [
     # API base url
-    path("api/", include("config.api_router")),
+    path("api/v1/", include("config.api_router")),
     path("api-auth/", include("rest_framework.urls")),
     # DRF auth token
     path("auth-token/", obtain_auth_token),
