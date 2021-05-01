@@ -6,9 +6,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from smart_ats.companies.models import Company
+from smart_ats.jobs.models import Job
 
 from .permissions import IsJobCompanyAdminOrReadOnly
-from .serializers import JobSerializer, JobWriterSerializer
+from .serializers import JobSerializer, JobWriterSerializer, JobApplicationSerializer, JobApplicationWriterSerializer
 
 
 class JobViewSet(viewsets.ModelViewSet):
@@ -42,3 +43,21 @@ class JobViewSet(viewsets.ModelViewSet):
         job.archive()
         job.save()
         return Response({"message": "Ok"})
+
+
+class JobApplicationViewSet(viewsets.ModelViewSet):
+    permission_classes = [
+
+    ]
+
+    def get_queryset(self):
+        try:
+            job = Job.objects.get(id=self.kwargs["job_id"], status=self.kwargs["Active"])
+        except ObjectDoesNotExist:
+            raise NotFound(detail="Job Does not exist")
+        return job.job_application.all()
+
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return JobApplicationSerializer
+        return JobApplicationWriterSerializer
