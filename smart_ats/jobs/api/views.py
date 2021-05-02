@@ -8,8 +8,13 @@ from rest_framework.response import Response
 from smart_ats.companies.models import Company
 from smart_ats.jobs.models import Job
 
-from .permissions import IsJobCompanyAdminOrReadOnly
-from .serializers import JobSerializer, JobWriterSerializer, JobApplicationSerializer, JobApplicationWriterSerializer
+from .permissions import IsApplicantOrJobCompanyAdmin, IsJobCompanyAdminOrReadOnly
+from .serializers import (
+    JobApplicationSerializer,
+    JobApplicationWriterSerializer,
+    JobSerializer,
+    JobWriterSerializer,
+)
 
 
 class JobViewSet(viewsets.ModelViewSet):
@@ -46,13 +51,13 @@ class JobViewSet(viewsets.ModelViewSet):
 
 
 class JobApplicationViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-
-    ]
+    permission_classes = [IsAuthenticated, IsApplicantOrJobCompanyAdmin]
 
     def get_queryset(self):
         try:
-            job = Job.objects.get(id=self.kwargs["job_id"], status=self.kwargs["Active"])
+            job = Job.objects.get(
+                id=self.kwargs["job_id"], status=self.kwargs["Active"]
+            )
         except ObjectDoesNotExist:
             raise NotFound(detail="Job Does not exist")
         return job.job_application.all()
