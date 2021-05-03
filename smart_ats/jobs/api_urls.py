@@ -10,7 +10,7 @@ else:
 
 
 router.register(r"companies/(?P<company_id>\d+)/jobs", JobViewSet, "jobs")
-router.register(r"jobs/(?P<Job_id>\d+)/apply", JobApplicationViewSet, "job-application")
+router.register(r"jobs/(?P<job_id>\d+)/apply", JobApplicationViewSet, "job-application")
 
 app_name = "jobs"
 urlpatterns = router.urls

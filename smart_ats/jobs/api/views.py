@@ -55,12 +55,10 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         try:
-            job = Job.objects.get(
-                id=self.kwargs["job_id"], status=self.kwargs["Active"]
-            )
+            job = Job.objects.get(id=self.kwargs["job_id"], state=Job.STATUS.ACTIVE)
         except ObjectDoesNotExist:
             raise NotFound(detail="Job Does not exist")
-        return job.job_application.all()
+        return job.jobapplication_set.all()
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
