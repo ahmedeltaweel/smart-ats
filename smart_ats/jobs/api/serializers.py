@@ -48,11 +48,14 @@ class JobWriterSerializer(TaggitSerializer, serializers.ModelSerializer):
             "title",
             "description",
             "category",
-            "company",
-            "author",
             "state",
             "tags",
         ]
+
+    def create(self, validated_data):
+        validated_data["company_id"] = self.context["view"].kwargs["company_id"]
+        validated_data["author"] = self.context["request"].user
+        return super().create(validated_data)
 
 
 class JobApplicationSerializer(serializers.ModelSerializer):
@@ -74,11 +77,12 @@ class JobApplicationWriterSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobApplication
         fields = [
-            "user",
-            "job",
             "state",
             "data",
             "cv_url",
         ]
 
-
+    def create(self, validated_data):
+        validated_data["job_id"] = self.context["view"].kwargs["job_id"]
+        validated_data["user"] = self.context["request"].user
+        return super().create(validated_data)
