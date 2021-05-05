@@ -300,3 +300,44 @@ class JobApplicationTest(APITestCase):
         self.assertEqual(response.data["state"], self.application.state)
         self.assertEqual(response.data["cv_url"], self.application.cv_url)
         self.assertEqual(response.data["data"], self.application.data)
+
+    def test_activate_action(self):
+        self.application.state = "DRAFT"
+        self.application.save()
+        response = self.client.patch(
+            "{}{}/activate/".format(self.api_path, self.application.id),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_shortlisted_action(self):
+        self.application.state = "ACTIVE"
+        self.application.save()
+        response = self.client.patch(
+            "{}{}/shortlisted/".format(self.api_path, self.application.id),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_rejected_action(self):
+        self.application.state = "ACTIVE"
+        self.application.save()
+        response = self.client.patch(
+            "{}{}/rejected/".format(self.api_path, self.application.id),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_archive_action(self):
+        response = self.client.patch(
+            "{}{}/archive/".format(self.api_path, self.application.id),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_archive_action_unauthorized(self):
+        response = APIClient().patch(
+            "{}{}/archive/".format(self.api_path, self.application.id),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
