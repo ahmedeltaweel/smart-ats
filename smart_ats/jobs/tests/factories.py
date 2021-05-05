@@ -30,13 +30,16 @@ class JobFactory(DjangoModelFactory):
     tags = ",".join([f"{x}_tag" for x in range(3)])
 
 
+job_application_status_list = [s[0] for s in JobApplication.STATUS]
+
+
 class JobApplicationFactory(DjangoModelFactory):
     class Meta:
         model = JobApplication
 
     user = factory.SubFactory(UserFactory)
     job = factory.SubFactory(JobFactory)
-    state = factory.fuzzy.FuzzyChoice(JobApplication.STATUS)
+    state = factory.fuzzy.FuzzyChoice(job_application_status_list)
     data = factory.Dict(
         {
             "name": factory.Faker("name"),

@@ -55,7 +55,7 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         try:
-            job = Job.objects.get(id=self.kwargs["job_id"], state=Job.STATUS.ACTIVE)
+            job = Job.objects.get(id=self.kwargs["job_id"])
         except ObjectDoesNotExist:
             raise NotFound(detail="Job Does not exist")
         return job.jobapplication_set.all()
@@ -64,3 +64,31 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
         if self.action in ["list", "retrieve"]:
             return JobApplicationSerializer
         return JobApplicationWriterSerializer
+
+    @action(detail=True, methods=["PATCH"])
+    def activate(self, request, pk=None, *args, **kwargs):
+        application = self.get_object()
+        application.activate()
+        application.save()
+        return Response({"message": "Ok"})
+
+    @action(detail=True, methods=["PATCH"])
+    def shortlisted(self, request, pk=None, *args, **kwargs):
+        application = self.get_object()
+        application.shortlisted()
+        application.save()
+        return Response({"message": "Ok"})
+
+    @action(detail=True, methods=["PATCH"])
+    def rejected(self, request, pk=None, *args, **kwargs):
+        application = self.get_object()
+        application.rejected()
+        application.save()
+        return Response({"message": "Ok"})
+
+    @action(detail=True, methods=["PATCH"])
+    def archive(self, request, pk=None, *args, **kwargs):
+        application = self.get_object()
+        application.archive()
+        application.save()
+        return Response({"message": "Ok"})

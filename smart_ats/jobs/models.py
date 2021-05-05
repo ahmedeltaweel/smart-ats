@@ -76,22 +76,18 @@ class JobApplication(TimeStampedModel):
     def activate(self):
         pass
 
-    @transition(
-        field=state,
-        source=STATUS.ACTIVE,
-        target=[STATUS.SHORTLISTED, STATUS.REJECTED, STATUS.ARCHIVED],
-    )
-    def phase2(self):
+    @transition(field=state, source=STATUS.ACTIVE, target=STATUS.SHORTLISTED)
+    def shortlisted(self):
         pass
 
     @transition(
         field=state,
-        source=STATUS.SHORTLISTED,
-        target=[STATUS.REJECTED, STATUS.ARCHIVED],
+        source=[STATUS.SHORTLISTED, STATUS.ACTIVE],
+        target=STATUS.REJECTED,
     )
-    def phase3(self):
+    def rejected(self):
         pass
 
-    @transition(field=state, source=STATUS.REJECTED, target=STATUS.ARCHIVED)
+    @transition(field=state, source="*", target=STATUS.ARCHIVED)
     def archive(self):
         pass

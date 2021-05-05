@@ -257,7 +257,7 @@ class JobApplicationTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]["user"]["id"], self.job.author.id)
         self.assertEqual(response.data[0]["job"]["id"], self.job.id)
-        self.assertEqual(eval(response.data[0]["state"]), self.application.state)
+        self.assertEqual(response.data[0]["state"], self.application.state)
         self.assertEqual(response.data[0]["cv_url"], self.application.cv_url)
         self.assertEqual(response.data[0]["data"], self.application.data)
 
@@ -297,6 +297,6 @@ class JobApplicationTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["user"]["id"], self.job.author.id)
         self.assertEqual(response.data["job"]["id"], self.job.id)
-        self.assertEqual(eval(response.data["state"]), self.application.state)
+        self.assertEqual(response.data["state"], self.application.state)
         self.assertEqual(response.data["cv_url"], self.application.cv_url)
         self.assertEqual(response.data["data"], self.application.data)
