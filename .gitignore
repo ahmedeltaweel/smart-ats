@@ -329,5 +329,5 @@ smart_ats/media/
 
 .vscode
 
-Makefile
+**/Makefile
 local1.yml

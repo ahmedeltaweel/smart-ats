@@ -10,7 +10,7 @@ from taggit.managers import TaggableManager
 from smart_ats.companies.models import Company, CompanyAdmin
 from smart_ats.users.models import User
 
-from .managers import JobManager
+from .managers import JobApplicationManager, JobManager
 
 
 class Category(MPTTModel):
@@ -72,6 +72,8 @@ class JobApplication(TimeStampedModel):
     data = JSONField()
     cv_url = models.URLField(max_length=100)
 
+    objects = JobApplicationManager()
+
     @transition(field=state, source=STATUS.DRAFT, target=STATUS.ACTIVE)
     def activate(self):
         pass
@@ -91,3 +93,6 @@ class JobApplication(TimeStampedModel):
     @transition(field=state, source="*", target=STATUS.ARCHIVED)
     def archive(self):
         pass
+
+    def __str__(self):
+        return f"Application: {self.id}: {self.job.title} {self.user.username}"
