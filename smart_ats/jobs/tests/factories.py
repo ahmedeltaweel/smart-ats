@@ -37,9 +37,11 @@ class JobApplicationFactory(DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
     job = factory.SubFactory(JobFactory)
     state = factory.fuzzy.FuzzyChoice(JobApplication.STATUS)
-    data = {
-        "name": "{}".format(factory.Faker("name")),
-        "adress": "{}".format(factory.Faker("address")),
-        "LinkedIn": "{}".format(factory.Faker("url")),
-    }
+    data = factory.Dict(
+        {
+            "name": factory.Faker("name"),
+            "adress": factory.Faker("address"),
+            "LinkedIn": factory.Faker("url"),
+        }
+    )
     cv_url = factory.Faker("url")

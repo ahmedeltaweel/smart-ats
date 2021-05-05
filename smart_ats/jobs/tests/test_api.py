@@ -7,7 +7,7 @@ from rest_framework.test import APIClient, APITestCase
 
 from smart_ats.companies.tests.factories import CompanyAdminFactory
 
-from .factories import CategoryFactory, JobFactory
+from .factories import CategoryFactory, JobApplicationFactory, JobFactory
 
 User = get_user_model()
 
@@ -77,7 +77,6 @@ class JobAPITestCase(APITestCase):
             "description": "temp",
             "category": category.id,
             "company": self.job.company_id,
-            "author": self.job.author.id,
             "state": "DRAFT",
             "tags": ["tag1", "tag2"],
         }
@@ -221,3 +220,83 @@ class JobAPITestCase(APITestCase):
             "/api/v1/companies/-1/jobs/", content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class JobApplicationTest(APITestCase):
+    def setUp(self):
+        self.job = JobFactory()
+        self.job.state = "ACTIVE"
+        self.job.save()
+        self.application = JobApplicationFactory()
+        self.application.job_id = self.job.id
+        self.application.user_id = self.job.author.id
+        self.application.save()
+        token = Token.objects.get_or_create(user=self.job.author)
+        self.client = APIClient(HTTP_AUTHORIZATION="Token " + token[0].key)
+        self.api_path = f"/api/v1/jobs/{self.job.id}/apply/"
+
+    def test_apply_for_job(self):
+        data = {"data": self.application.data, "cv_url": self.application.cv_url}
+        response = self.client.post(
+            "{}".format(self.api_path),
+            data=json.dumps(data),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["user"], self.job.author.id)
+        self.assertEqual(response.data["job"], self.job.id)
+        self.assertEqual(response.data["state"], "DRAFT")
+        self.assertEqual(response.data["cv_url"], self.application.cv_url)
+        self.assertEqual(response.data["data"], self.application.data)
+
+    def test_list_job_applications_authorized(self):
+        response = self.client.get(
+            "{}".format(self.api_path),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]["user"]["id"], self.job.author.id)
+        self.assertEqual(response.data[0]["job"]["id"], self.job.id)
+        self.assertEqual(eval(response.data[0]["state"]), self.application.state)
+        self.assertEqual(response.data[0]["cv_url"], self.application.cv_url)
+        self.assertEqual(response.data[0]["data"], self.application.data)
+
+    def test_list_job_applications_unauthorized(self):
+        response = APIClient().get(
+            "{}".format(self.api_path),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_apply_for_non_Active_job(self):
+        non_Active_job = JobFactory.create()
+        data = {"data": self.application.data, "cv_url": self.application.cv_url}
+        response = self.client.post(
+            f"/api/v1/jobs/{non_Active_job.id}/apply/",
+            data=json.dumps(data),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_apply_for_job_with_no_cv_url(self):
+        data = {
+            "data": self.application.data,
+        }
+        response = self.client.post(
+            "{}".format(self.api_path),
+            data=json.dumps(data),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_retirieve_application(self):
+        response = self.client.get(
+            "{}{}/".format(self.api_path, self.application.id),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["user"]["id"], self.job.author.id)
+        self.assertEqual(response.data["job"]["id"], self.job.id)
+        self.assertEqual(eval(response.data["state"]), self.application.state)
+        self.assertEqual(response.data["cv_url"], self.application.cv_url)
+        self.assertEqual(response.data["data"], self.application.data)
