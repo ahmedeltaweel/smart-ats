@@ -5,6 +5,8 @@ from smart_ats.companies.models import Company
 from smart_ats.jobs.models import Category, Job, JobApplication
 from smart_ats.users.api.serializers import SimpleUserSerializer
 
+from .serializer_fields import CurrrentCompanyAdmin, CurrrentCompanyId, CurrrentJobId
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,6 +42,8 @@ class JobSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 class JobWriterSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
+    author = serializers.HiddenField(default=CurrrentCompanyAdmin())
+    company_id = serializers.HiddenField(default=CurrrentCompanyId())
 
     class Meta:
         model = Job
@@ -50,15 +54,9 @@ class JobWriterSerializer(TaggitSerializer, serializers.ModelSerializer):
             "category",
             "state",
             "author",
-            "company",
             "tags",
+            "company_id",
         ]
-        read_only_fields = ("author", "company")
-
-    def create(self, validated_data):
-        validated_data["company_id"] = int(self.context["view"].kwargs["company_id"])
-        validated_data["author"] = self.context["request"].user.companyadmin
-        return super().create(validated_data)
 
 
 class JobApplicationSerializer(serializers.ModelSerializer):
@@ -77,18 +75,9 @@ class JobApplicationSerializer(serializers.ModelSerializer):
 
 
 class JobApplicationWriterSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    job_id = serializers.HiddenField(default=CurrrentJobId())
+
     class Meta:
         model = JobApplication
-        fields = [
-            "data",
-            "cv_url",
-            "state",
-            "user",
-            "job",
-        ]
-        read_only_fields = ("state", "user", "job")
-
-    def create(self, validated_data):
-        validated_data["job_id"] = int(self.context["view"].kwargs["job_id"])
-        validated_data["user"] = self.context["request"].user
-        return super().create(validated_data)
+        fields = ["data", "cv_url", "user", "job_id"]

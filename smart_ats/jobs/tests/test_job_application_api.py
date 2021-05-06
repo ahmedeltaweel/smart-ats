@@ -9,13 +9,10 @@ from .factories import JobApplicationFactory, JobFactory
 
 class JobApplicationTest(APITestCase):
     def setUp(self):
-        self.job = JobFactory()
-        self.job.state = "ACTIVE"
-        self.job.save()
-        self.application = JobApplicationFactory()
-        self.application.job_id = self.job.id
-        self.application.user_id = self.job.author.id
-        self.application.save()
+        self.job = JobFactory.create(state="ACTIVE")
+        self.application = JobApplicationFactory.create(
+            job_id=self.job.id, user_id=self.job.author.id
+        )
         token = Token.objects.get_or_create(user=self.job.author)
         self.client = APIClient(HTTP_AUTHORIZATION="Token " + token[0].key)
         self.api_path = f"/api/v1/jobs/{self.job.id}/apply/"
@@ -28,9 +25,6 @@ class JobApplicationTest(APITestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["user"], self.job.author.id)
-        self.assertEqual(response.data["job"], self.job.id)
-        self.assertEqual(response.data["state"], "DRAFT")
         self.assertEqual(response.data["cv_url"], self.application.cv_url)
         self.assertEqual(response.data["data"], self.application.data)
 
