@@ -77,7 +77,6 @@ class JobAPITestCase(APITestCase):
             "description": "temp",
             "category": category.id,
             "company": self.job.company_id,
-            "author": self.job.author.id,
             "state": "DRAFT",
             "tags": ["tag1", "tag2"],
         }
@@ -90,8 +89,6 @@ class JobAPITestCase(APITestCase):
         self.assertEqual(response.data["title"], "title1")
         self.assertEqual(response.data["description"], "temp")
         self.assertEqual(response.data["category"], category.id)
-        self.assertEqual(response.data["company"], self.job.company.id)
-        self.assertEqual(response.data["author"], self.job.author.id)
         self.assertEqual(response.data["state"], "DRAFT")
         self.assertCountEqual(response.data["tags"], ["tag1", "tag2"])
 
