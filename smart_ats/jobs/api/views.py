@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from smart_ats.companies.models import Company
-from smart_ats.jobs.models import Job
+from smart_ats.jobs.models import JobApplication
 
 from .permissions import IsApplicantOrJobCompanyAdmin, IsJobCompanyAdminOrReadOnly
 from .serializers import (
@@ -54,11 +54,7 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsApplicantOrJobCompanyAdmin]
 
     def get_queryset(self):
-        try:
-            job = Job.objects.get(id=self.kwargs["job_id"])
-        except ObjectDoesNotExist:
-            raise NotFound(detail="Job Does not exist")
-        return job.jobapplication_set.all()
+        return JobApplication.objects.filter(job_id=self.kwargs["job_id"])
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
