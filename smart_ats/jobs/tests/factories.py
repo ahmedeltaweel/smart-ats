@@ -38,7 +38,7 @@ class JobApplicationFactory(DjangoModelFactory):
         model = JobApplication
 
     user = factory.SubFactory(UserFactory)
-    job = factory.SubFactory(JobFactory)
+    job = factory.SubFactory(JobFactory, state=Job.STATUS.ACTIVE)
     state = factory.fuzzy.FuzzyChoice(job_application_status_list)
     data = factory.Dict(
         {
