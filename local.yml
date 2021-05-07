@@ -110,11 +110,11 @@ services:
       - es-data:/usr/share/elasticsearch/data
     # command to limit logging messages of starting service
     command: ["elasticsearch", "-Elogger.level=WARN"]
-    expose:
-      - 9200
+    ports:
+      - 9200:9200
     networks:
       - elastic
 
 networks:
   elastic:
-    driver: bridge
+    driver: overlay
