@@ -1,0 +1,1 @@
+Hi {{ receiver_name }} this is sms!

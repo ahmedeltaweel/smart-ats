@@ -11,7 +11,7 @@ class CompanyFactory(DjangoModelFactory):
         model = Company
         django_get_or_create = ["name"]
 
-    name = factory.Faker("company")
+    name = factory.Faker("pystr", max_chars=15)
     description = factory.Faker("catch_phrase")
     website = factory.Faker("url")
     address = factory.Faker("address")
