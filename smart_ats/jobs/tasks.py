@@ -1,4 +1,5 @@
 from __future__ import absolute_import, unicode_literals
+
 from celery import shared_task
 from pyresparser import ResumeParser
 
@@ -13,5 +14,5 @@ def cv(pdf):
     data = ResumeParser(pdf).get_extracted_data()
 
     for key, value in data.items():
-        print(key, ':', value)
-    # return data
+        print(key, ":", value)
+    return data
