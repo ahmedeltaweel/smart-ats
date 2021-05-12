@@ -1,6 +1,6 @@
 from django.dispatch import Signal, receiver
 
-from .celery_tasks import notify_comapnyadmin
+from .tasks import notify_comapnyadmin
 
 JobApplicationActivatedSignal = Signal()
 
