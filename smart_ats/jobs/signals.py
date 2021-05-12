@@ -1,14 +1,14 @@
 from django.dispatch import Signal, receiver
 
+from .celery_tasks import notify_comapnyadmin
+
 JobApplicationActivatedSignal = Signal()
 
 
 @receiver(
     JobApplicationActivatedSignal,
 )
-def notify_comapnyadmin(sender, instance, **kwargs):
-    company_admins = instance.job.company.company_admin.all()
-    for company_admin in company_admins:
-        print(
-            f"dear {company_admin.username} job Application {instance} is activated for job "
-        )
+def job_activated(sender, instance, *args, **kwargs):
+    notify_comapnyadmin.apply_async(
+        args=(instance.id, instance.job.company.id),
+    )
