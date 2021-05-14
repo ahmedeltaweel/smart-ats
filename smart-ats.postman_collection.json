@@ -1,0 +1,517 @@
+{
+	"info": {
+		"_postman_id": "ab7765ac-8bdf-4f5a-bd67-33c734cd5ab5",
+		"name": "smart-ats",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "companies",
+			"item": [
+				{
+					"name": "GET UnAuthenticated",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/companies/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"companies",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Authenticated",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{API_URL}}/companies/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"companies",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Single Company",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/companies/1",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"companies",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE Company",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test Company\",\n    \"website\": \"https://test-company.com\",\n    \"description\": \"This is a Test Company\",\n    \"address\": \"Test Test Test \"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/companies/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"companies",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Partial Update/ Not Admin",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 18,\n    \"name\": \"Test Company Test\",\n    \"website\": \"https://test-company.com\",\n    \"description\": \"This is a Test Company after patch\",\n    \"address\": \"Test Test Test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/companies/18/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"companies",
+								"18",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Partial Update/ Company Admin",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{COMPANY_ADMIN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"Test patch\",\n    \"website\": \"https://test-company.com\",\n    \"description\": \"This is a Test Company after patch\",\n    \"address\": \"Test Test Test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/companies/1/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"companies",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Full Update/ Company Admin",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{COMPANY_ADMIN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"Test Company 2\",\n    \"website\": \"https://test-hamada-company.com\",\n    \"description\": \"This is a Test Company after PUT\",\n    \"address\": \"Test Test Test ya hamada\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/companies/1/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"companies",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "jobs",
+			"item": [
+				{
+					"name": "GET Jobs per Company",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/companies/1/jobs/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"companies",
+								"1",
+								"jobs",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Single Job",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/companies/1/jobs/1",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"companies",
+								"1",
+								"jobs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Job",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{COMPANY_ADMIN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Back-end Engineer\",\n    \"description\": \"Python Django Engineer Required\",\n    \"category\": 1,\n    \"state\": \"ACTIVE\",\n    \"tags\": [\"python\", \"django\", \"docker\", \"postgresql\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/companies/1/jobs/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"companies",
+								"1",
+								"jobs",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Partial Update Job",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{COMPANY_ADMIN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Back-end Engineer\",\n    \"description\": \"Python Django Engineer Required\",\n    \"category\": 1,\n    \"state\": \"DRAFT\",\n    \"tags\": [\"python\", \"django\", \"docker\", \"postgresql\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/companies/1/jobs/18/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"companies",
+								"1",
+								"jobs",
+								"18",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Full Update Job",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{COMPANY_ADMIN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Back-End Engineer\",\n    \"description\": \"Python Django SW Engineer\",\n    \"category\": 2,\n    \"state\": \"ACTIVE\",\n    \"tags\": [\"Python\", \"flask\", \"REST\", \"mysql\", \"clery\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/companies/1/jobs/18/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"companies",
+								"1",
+								"jobs",
+								"18",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Job Applications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{COMPANY_ADMIN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/jobs/1/apply/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"jobs",
+								"1",
+								"apply",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Job Applications/ Not Admin",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/jobs/1/apply/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"jobs",
+								"1",
+								"apply",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE Job Application",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{COMPANY_ADMIN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\": {\n        \"linkedIn\": \"https://linkedin.com/in/elsaeed-ahmed\",\n        \"skills\": [\"Python\", \"Django\", \"Postgres\"]\n    },\n    \"cv_url\": \"https://cv-url.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/jobs/1/apply/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"jobs",
+								"1",
+								"apply",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "AUTH_TOKEN",
+			"value": "ca8aa732a5e7c78c8c0a245831a83dd34cab3c3b"
+		},
+		{
+			"key": "API_URL",
+			"value": "http://127.0.0.1:8000/api/v1\n\n"
+		},
+		{
+			"key": "COMPANY_ADMIN",
+			"value": "a0be242d8d210dd2cc48c7e94c6c3cb5959e4362"
+		}
+	]
+}
