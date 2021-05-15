@@ -11,7 +11,7 @@ from smart_ats.companies.models import Company, CompanyAdmin
 from smart_ats.users.models import User
 
 from .managers import JobApplicationManager, JobManager
-from .signals import JobApplicationActivatedSignal
+from .utils import job_activated
 
 
 class Category(MPTTModel):
@@ -77,7 +77,7 @@ class JobApplication(TimeStampedModel):
 
     @transition(field=state, source=STATUS.DRAFT, target=STATUS.ACTIVE)
     def activate(self):
-        JobApplicationActivatedSignal.send(sender=self.__class__, instance=self)
+        job_activated(instance=self)
 
     @transition(field=state, source=STATUS.ACTIVE, target=STATUS.SHORTLISTED)
     def shortlisted(self):

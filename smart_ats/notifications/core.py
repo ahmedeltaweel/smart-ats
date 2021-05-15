@@ -1,3 +1,6 @@
+from django.core.mail import send_mail
+
+
 class SmsNotification:
     @staticmethod
     def send(data: str):
@@ -8,7 +11,12 @@ class SmsNotification:
 
 class EmailNotification:
     @staticmethod
-    def send(data: str):
+    def send(data: str, email: str) -> None:
         # call sms service call sendgrid
-        print("=======EMAIL============")
-        print(data)
+        send_mail(
+            subject="no-reply",
+            message=data,
+            html_message=data,
+            recipient_list=[email],
+            from_email="no-reply@taher.com",
+        )
