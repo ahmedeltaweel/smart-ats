@@ -11,7 +11,7 @@ from smart_ats.companies.models import Company, CompanyAdmin
 from smart_ats.users.models import User
 
 from .managers import JobApplicationManager, JobManager
-from .utils import job_activated
+from .tasks import notify_comapnyadmin
 
 
 class Category(MPTTModel):
@@ -77,7 +77,9 @@ class JobApplication(TimeStampedModel):
 
     @transition(field=state, source=STATUS.DRAFT, target=STATUS.ACTIVE)
     def activate(self):
-        job_activated(instance=self)
+        notify_comapnyadmin.apply_async(
+            args=(self.id, self.job.title, self.job.company_id),
+        )
 
     @transition(field=state, source=STATUS.ACTIVE, target=STATUS.SHORTLISTED)
     def shortlisted(self):
