@@ -15,4 +15,4 @@ def notify_comapnyadmin(instance_id, job_name, company_id) -> None:
                 },
                 template=EmailTemplates.JOBAPPLY,
             )
-        ).email(company_admin.email)
+        ).email([company_admin.email], subject="A new applicant")

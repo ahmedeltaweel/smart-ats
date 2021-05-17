@@ -1,7 +1,13 @@
+from typing import List
+
 from django.http import HttpResponse
 
 from .core import EmailNotification, SmsNotification
-from .service import NotificationContent, NotificationContentConstructorService
+from .service import (
+    EmailContent,
+    NotificationContent,
+    NotificationContentConstructorService,
+)
 from .templates import EmailTemplates
 
 
@@ -14,8 +20,15 @@ class Notification:
     def sms(self) -> None:
         SmsNotification.send(self.content)
 
-    def email(self, email: str) -> None:
-        EmailNotification.send(self.content, email)
+    def email(self, emails: List[str], subject: str) -> None:
+        EmailNotification.send(
+            EmailContent(
+                message=self.content,
+                html_message=self.content,
+                recipient_list=emails,
+                subject=subject,
+            )
+        )
 
 
 def send_notification(request, username: str) -> HttpResponse:
