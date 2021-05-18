@@ -1,6 +1,6 @@
 from .factories import JobApplicationFactory
 from django.test import TestCase
-from smart_ats.jods.tasks import cv
+from smart_ats.jobs.tasks import cv
 
 
 class TestCvParserData(TestCase):
