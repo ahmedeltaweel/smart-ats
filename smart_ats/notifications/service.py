@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Dict, List, Union
 
+from django.conf import settings
 from django.template.loader import render_to_string
 
 from .exceptions import (
@@ -16,7 +17,7 @@ class EmailContent:
     html_message: str
     recipient_list: List[str]
     subject: str
-    from_email: str = "no_reply@taher.com"
+    from_email: str = settings.DEFAULT_FROM_EMAIL
 
 
 @dataclass(frozen=True)
