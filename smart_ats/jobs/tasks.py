@@ -6,22 +6,13 @@ from .models import JobApplication
 
 
 @app.task
-def cv(url, job_id):
-    job_applications = JobApplication.objects.filter(job_id=job_id)
-    for job_application in job_applications:
-        response = urllib.request.urlopen(url)
-        if url[-3:] == 'pdf':
-            file = open("resume.pdf", 'wb')
-            file.write(response.read())
-            file.close()
-            data = ResumeParser("resume.pdf").get_extracted_data()
-            os.remove("resume.pdf")
-        else:
-            file = open("resume.txt", 'wb')
-            file.write(response.read())
-            file.close()
-            data = ResumeParser("resume.txt").get_extracted_data()
-            os.remove("resume.txt")
-        job_application.data = data
-        job_application.save()
-        # return data
+def cv(url, job_app_id):
+    job_application = JobApplication.objects.get(id=job_app_id)
+    response = urllib.request.urlopen(url)
+    with open("resume." + url[-3:], 'wb') as file:
+        file.write(response.read())
+    data = ResumeParser("resume." + url[-3:]).get_extracted_data()
+    os.remove("resume." + url[-3:])
+    job_application.data = data
+    job_application.save()
+    return data
