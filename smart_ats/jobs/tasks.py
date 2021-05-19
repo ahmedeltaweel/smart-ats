@@ -15,4 +15,3 @@ def cv(url, job_app_id):
     os.remove("resume." + url[-3:])
     job_application.data = data
     job_application.save()
-    return data
