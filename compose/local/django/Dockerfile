@@ -39,9 +39,3 @@ RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
 
 WORKDIR /app
-
-RUN python -m spacy download en_core_web_sm
-
-RUN python -m nltk.downloader punkt
-RUN python -m nltk.downloader stopwords
-ENTRYPOINT ["/entrypoint"]

@@ -11,6 +11,7 @@ from smart_ats.companies.models import Company, CompanyAdmin
 from smart_ats.users.models import User
 
 from .managers import JobApplicationManager, JobManager
+from .tasks import cv
 
 
 class Category(MPTTModel):
@@ -76,7 +77,7 @@ class JobApplication(TimeStampedModel):
 
     @transition(field=state, source=STATUS.DRAFT, target=STATUS.ACTIVE)
     def activate(self):
-        pass
+        cv.delay(self.cv_url, self.id)
 
     @transition(field=state, source=STATUS.ACTIVE, target=STATUS.SHORTLISTED)
     def shortlisted(self):
