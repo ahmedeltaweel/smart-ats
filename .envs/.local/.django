@@ -14,3 +14,5 @@ CELERY_BROKER_URL=redis://redis:6379/0
 CELERY_FLOWER_USER=debug
 CELERY_FLOWER_PASSWORD=debug
 
+#Email
+DEFAULT_FROM_EMAIL=no_reply@smart.com
