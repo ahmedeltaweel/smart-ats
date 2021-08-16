@@ -11,7 +11,12 @@ SECRET_KEY = env(
     default="QSg3FSGdKVbNXas1TtQlNFQ8zpsEVouul79RvP4OvURBeOLMxgan0WukzfWinxWH",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1","192.168.99.100"] #192.168.99.100 for windows
+ALLOWED_HOSTS = [
+    "localhost",
+    "0.0.0.0",
+    "127.0.0.1",
+    "192.168.99.100",
+]  # 192.168.99.100 for windows
 
 # CACHES
 # ------------------------------------------------------------------------------
@@ -29,7 +34,7 @@ CACHES = {
 EMAIL_HOST = env("EMAIL_HOST", default="mailhog")
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-port
 EMAIL_PORT = 1025
-
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#prerequisites

@@ -75,6 +75,7 @@ THIRD_PARTY_APPS = [
     "taggit",
     "django_fsm",
     "taggit_serializer",
+    "mptt",
 ]
 
 LOCAL_APPS = [
@@ -82,7 +83,6 @@ LOCAL_APPS = [
     "smart_ats.companies.apps.CompaniesConfig",
     "smart_ats.jobs.apps.JobsConfig",
     "smart_ats.notifications.apps.NotificationConfig",
-    "mptt",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
