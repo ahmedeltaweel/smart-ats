@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-from typing import Any, Dict, Union
+from typing import Any, Dict, List, Union
 
+from django.conf import settings
 from django.template.loader import render_to_string
 
 from .exceptions import (
@@ -8,6 +9,15 @@ from .exceptions import (
     UnSupportedNotificationMethodException,
 )
 from .templates import EmailTemplates, SMSTemplates
+
+
+@dataclass
+class EmailContent:
+    message: str
+    html_message: str
+    recipient_list: List[str]
+    subject: str
+    from_email: str = settings.DEFAULT_FROM_EMAIL
 
 
 @dataclass(frozen=True)

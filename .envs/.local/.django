@@ -16,3 +16,6 @@ CELERY_FLOWER_PASSWORD=debug
 
 # ElasticSearch
 ELASTICSEARCH_URL=localhost:9200
+
+#Email
+DEFAULT_FROM_EMAIL=no_reply@smart.com
