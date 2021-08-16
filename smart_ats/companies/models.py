@@ -14,6 +14,9 @@ class CompanyAdmin(User):
     class Meta:
         verbose_name = "Company Admin"
 
+    class Meta:
+        verbose_name = "Company Admin"
+
     objects = CompanyAdminManager()
 
     def __str__(self):

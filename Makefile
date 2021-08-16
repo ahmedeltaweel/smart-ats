@@ -54,3 +54,6 @@ test_local:
 
 stagingup:
 	docker-compose -f staging.yml up -d --build
+
+rebuild_index:
+	docker-compose -f local.yml exec django /entrypoint ./manage.py search_index --rebuild

@@ -3,6 +3,8 @@ version: '3'
 volumes:
   local_postgres_data: {}
   local_postgres_data_backups: {}
+  es-data:
+    driver: local
 
 services:
   django: &django
@@ -14,6 +16,7 @@ services:
     depends_on:
       - postgres
       - mailhog
+      - elasticsearch
     volumes:
       - .:/app:z
     env_file:
@@ -90,3 +93,29 @@ services:
     ports:
       - "5555:5555"
     command: /start-flower
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.1
+    environment:
+      - node.name=es
+      - cluster.name=es-docker-cluster
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    # command to limit logging messages of starting service
+    command: ["elasticsearch", "-Elogger.level=WARN"]
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+
+networks:
+  elastic:
+    driver: overlay
