@@ -24,6 +24,3 @@ jobs:
       
       - name: Push Images to registry
         run: docker-compose -f local.yml push
-
-      - name: Tear down the Stack
-        run:  docker-compose -f local.yml down
