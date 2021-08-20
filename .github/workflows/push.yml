@@ -5,19 +5,25 @@ on:
       branches: [ "master" ]
   
 jobs:
-  pytest:
+  pushtoregistry:
     runs-on: ubuntu-latest
     steps:
 
       - name: Checkout Code Repository
         uses: actions/checkout@v2.3.4
-      
-      # - name: Set up Docker Builder
-      #   uses: docker/setup-buildx-action@v1
 
-      - name: Log in To registry
+      - name: Log in to Registry
         uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.REGISTRY_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Building Images
+        run:  docker-compose -f local.yml build
+      
+      - name: Push Images to registry
+        run: docker-compose -f local.yml push
+
+      - name: Tear down the Stack
+        run:  docker-compose -f local.yml down
