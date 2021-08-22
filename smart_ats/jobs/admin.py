@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Job, Category, JobApplication
+from .models import Category, Job, JobApplication
 
 
 @admin.register(Job)
@@ -16,4 +16,3 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(JobApplication)
 class JobApplication(admin.ModelAdmin):
     ...
-
