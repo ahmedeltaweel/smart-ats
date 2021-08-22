@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Building Images
-        run:  docker-compose -f local.yml build
+        run:  docker-compose -f production.yml build
       
       - name: Add GITHUB_SHA tag to images and push them to registry
         run: sh ./tag_images.sh

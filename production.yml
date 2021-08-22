@@ -10,31 +10,31 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
-    image: smart_ats_production_django
+    image: smartats.azurecr.io/smart_ats_production_django
     depends_on:
       - postgres
       - redis
     env_file:
-      - ./.envs/.production/.django
-      - ./.envs/.production/.postgres
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
     command: /start
 
   postgres:
     build:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
-    image: smart_ats_production_postgres
+    image: smartats.azurecr.io/smart_ats_production_postgres
     volumes:
       - production_postgres_data:/var/lib/postgresql/data:Z
       - production_postgres_data_backups:/backups:z
     env_file:
-      - ./.envs/.production/.postgres
+      - ./.envs/.local/.postgres
 
   traefik:
     build:
       context: .
       dockerfile: ./compose/production/traefik/Dockerfile
-    image: smart_ats_production_traefik
+    image: smartats.azurecr.io/smart_ats_production_traefik
     depends_on:
       - django
     volumes:
@@ -49,25 +49,26 @@ services:
 
   celeryworker:
     <<: *django
-    image: smart_ats_production_celeryworker
+    image: smartats.azurecr.io/smart_ats_production_celeryworker
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
-    image: smart_ats_production_celerybeat
+    image: smartats.azurecr.io/smart_ats_production_celerybeat
     command: /start-celerybeat
 
   flower:
     <<: *django
-    image: smart_ats_production_flower
+    image: smartats.azurecr.io/smart_ats_production_flower
     command: /start-flower
 
-  
+
   awscli:
     build:
       context: .
       dockerfile: ./compose/production/aws/Dockerfile
+    image: smartats.azurecr.io/awscli
     env_file:
-      - ./.envs/.production/.django
+      - ./.envs/.local/.django
     volumes:
       - production_postgres_data_backups:/backups:z
