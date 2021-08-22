@@ -22,5 +22,8 @@ jobs:
       - name: Building Images
         run:  docker-compose -f local.yml build
       
+      - name: Add GITHUB_SHA tag to images
+        run: sh ./tag_images.sh
+      
       - name: Push Images to registry
         run: docker-compose -f local.yml push
