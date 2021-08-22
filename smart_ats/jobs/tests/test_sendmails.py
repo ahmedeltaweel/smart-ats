@@ -27,5 +27,5 @@ class TestSentmailAfterApply(TestCase):
             for c in CompanyAdmin.objects.filter(company_id=job_apply.job.company_id)
         ]
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, "no-reply")
+        self.assertEqual(mail.outbox[0].subject, "A new applicant")
         self.assertListEqual(mail.outbox[0].to, company_admins)
