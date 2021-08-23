@@ -28,6 +28,9 @@ jobs:
 
       - name: Building Images
         run:  docker-compose -f production.yml build
+
+      - name: Make DB Migrations
+        run:  docker-compose -f production.yml run --rm django python manage.py migrate
       
       - name: Add GITHUB_SHA tag to images and push them to registry
         run: sh ./tag_images.sh
