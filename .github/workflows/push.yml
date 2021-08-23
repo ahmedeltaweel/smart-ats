@@ -8,7 +8,14 @@ jobs:
   pushtoregistry:
     runs-on: ubuntu-latest
     steps:
-
+      - name: Wait for tests to succeed
+        uses: lewagon/wait-on-check-action@v0.2
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Testing'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+      
       - name: Checkout Code Repository
         uses: actions/checkout@v2.3.4
 
