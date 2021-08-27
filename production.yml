@@ -12,23 +12,11 @@ services:
       dockerfile: ./compose/production/django/Dockerfile
     image: smartats.azurecr.io/smart_ats_production_django
     depends_on:
-      - postgres
       - redis
     env_file:
-      - ./.envs/.local/.django
-      - ./.envs/.local/.postgres
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
     command: /start
-
-  postgres:
-    build:
-      context: .
-      dockerfile: ./compose/production/postgres/Dockerfile
-    image: smartats.azurecr.io/smart_ats_production_postgres
-    volumes:
-      - production_postgres_data:/var/lib/postgresql/data:Z
-      - production_postgres_data_backups:/backups:z
-    env_file:
-      - ./.envs/.local/.postgres
 
   traefik:
     build:
@@ -69,6 +57,6 @@ services:
       dockerfile: ./compose/production/aws/Dockerfile
     image: smartats.azurecr.io/awscli
     env_file:
-      - ./.envs/.local/.django
+      - ./.envs/.production/.django
     volumes:
       - production_postgres_data_backups:/backups:z
