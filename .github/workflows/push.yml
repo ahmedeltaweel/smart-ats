@@ -7,6 +7,7 @@ on:
 jobs:
   pushtoregistry:
     runs-on: ubuntu-latest
+    name: Pushing to Registry
     steps:
       - name: Wait for tests to succeed
         uses: lewagon/wait-on-check-action@v0.2

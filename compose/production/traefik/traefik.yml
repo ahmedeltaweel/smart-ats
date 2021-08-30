@@ -26,8 +26,8 @@ certificatesResolvers:
 http:
   routers:
     web-router:
-      rule: "Host(`example.com`) || Host(`www.example.com`)"
-      
+      rule: "Host(`0.0.0.0`) || Host(`www.0.0.0.0`)"
+
       entryPoints:
         - web
       middlewares:
@@ -36,8 +36,8 @@ http:
       service: django
 
     web-secure-router:
-      rule: "Host(`example.com`) || Host(`www.example.com`)"
-      
+      rule: "Host(`0.0.0.0`) || Host(`www.0.0.0.0`)"
+
       entryPoints:
         - web-secure
       middlewares:
@@ -48,7 +48,7 @@ http:
         certResolver: letsencrypt
 
     flower-secure-router:
-      rule: "Host(`example.com`)"
+      rule: "Host(`0.0.0.0`)"
       entryPoints:
         - flower
       service: flower
