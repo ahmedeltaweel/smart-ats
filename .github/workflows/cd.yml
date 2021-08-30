@@ -21,7 +21,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.HOST_USERNAME }}
-          key: ${{ secrets.HOST_KEY }}
+          password: ${{ secrets.HOST_PASSWORD }}
           script: |
             docker login smartats.azurecr.io -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }}
             cd ${{ secrets.PRJ_PATH }}
