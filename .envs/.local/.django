@@ -16,3 +16,6 @@ CELERY_FLOWER_PASSWORD=debug
 
 #Email
 DEFAULT_FROM_EMAIL=no_reply@smart.com
+
+# Django
+DJANGO_SETTINGS_MODULE=config.settings.local

@@ -7,8 +7,16 @@ on:
 jobs:
   pushtoregistry:
     runs-on: ubuntu-latest
+    name: Pushing to Registry
     steps:
-
+      - name: Wait for tests to succeed
+        uses: lewagon/wait-on-check-action@v0.2
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Testing'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+      
       - name: Checkout Code Repository
         uses: actions/checkout@v2.3.4
 
@@ -20,7 +28,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Building Images
-        run:  docker-compose -f local.yml build
-      
-      - name: Push Images to registry
-        run: docker-compose -f local.yml push
+        run:  docker-compose -f production.yml build
+
+      - name: Add GITHUB_SHA tag to images and push them to registry
+        run: sh ./tag_images.sh

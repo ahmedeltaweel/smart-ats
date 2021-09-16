@@ -10,31 +10,36 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
-    image: smart_ats_production_django
+    image: smartats.azurecr.io/smart_ats_production_django
     depends_on:
-      - postgres
       - redis
-    env_file:
-      - ./.envs/.production/.django
-      - ./.envs/.production/.postgres
+    environment:
+      CELERY_BROKER_URL
+      CELERY_FLOWER_PASSWORD
+      CELERY_FLOWER_USER
+      DEFAULT_FROM_EMAIL
+      DJANGO_AWS_ACCESS_KEY_ID
+      DJANGO_AWS_S3_REGION_NAME
+      DJANGO_AWS_SECRET_ACCESS_KEY
+      DJANGO_AWS_STORAGE_BUCKET_NAME
+      DJANGO_SECRET_KEY
+      DJANGO_SETTINGS_MODULE
+      REDIS_URL
+      SENTRY_DSN
+      IPYTHONDIR
+      POSTGRES_DB
+      POSTGRES_HOST
+      POSTGRES_PASSWORD
+      POSTGRES_PORT
+      POSTGRES_USER
+      SSLMODE
     command: /start
-
-  postgres:
-    build:
-      context: .
-      dockerfile: ./compose/production/postgres/Dockerfile
-    image: smart_ats_production_postgres
-    volumes:
-      - production_postgres_data:/var/lib/postgresql/data:Z
-      - production_postgres_data_backups:/backups:z
-    env_file:
-      - ./.envs/.production/.postgres
 
   traefik:
     build:
       context: .
       dockerfile: ./compose/production/traefik/Dockerfile
-    image: smart_ats_production_traefik
+    image: smartats.azurecr.io/smart_ats_production_traefik
     depends_on:
       - django
     volumes:
@@ -49,25 +54,38 @@ services:
 
   celeryworker:
     <<: *django
-    image: smart_ats_production_celeryworker
+    image: smartats.azurecr.io/smart_ats_production_celeryworker
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
-    image: smart_ats_production_celerybeat
+    image: smartats.azurecr.io/smart_ats_production_celerybeat
     command: /start-celerybeat
 
   flower:
     <<: *django
-    image: smart_ats_production_flower
+    image: smartats.azurecr.io/smart_ats_production_flower
     command: /start-flower
 
-  
+
   awscli:
     build:
       context: .
       dockerfile: ./compose/production/aws/Dockerfile
-    env_file:
-      - ./.envs/.production/.django
+    image: smartats.azurecr.io/awscli
+    environment:
+      CELERY_BROKER_URL
+      CELERY_FLOWER_PASSWORD
+      CELERY_FLOWER_USER
+      DEFAULT_FROM_EMAIL
+      DJANGO_AWS_ACCESS_KEY_ID
+      DJANGO_AWS_S3_REGION_NAME
+      DJANGO_AWS_SECRET_ACCESS_KEY
+      DJANGO_AWS_STORAGE_BUCKET_NAME
+      DJANGO_SECRET_KEY
+      DJANGO_SETTINGS_MODULE
+      REDIS_URL
+      SENTRY_DSN
+      IPYTHONDIR
     volumes:
       - production_postgres_data_backups:/backups:z

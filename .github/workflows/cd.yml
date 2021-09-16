@@ -1,0 +1,32 @@
+name: CD
+
+on:
+  push:
+      branches: [ "master" ]
+  
+jobs:
+  pushtoregistry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for CI to finish
+        uses: lewagon/wait-on-check-action@v0.2
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Pushing to Registry'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+      
+      - name: Deploy stack
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          password: ${{ secrets.HOST_PASSWORD }}
+          script: |
+            docker login smartats.azurecr.io -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }}
+            cd ${{ secrets.PRJ_PATH }}
+            git pull 
+            docker-compose -f production.yml run --rm django python manage.py migrate
+            docker stack deploy -c production.yml ${{ secrets.PRJ_PREFIX }} --with-registry-auth
+
+            
