@@ -26,6 +26,7 @@ jobs:
             docker login smartats.azurecr.io -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }}
             cd ${{ secrets.PRJ_PATH }}
             git pull 
+            docker-compose -f production.yml run --rm django python manage.py migrate
             docker stack deploy -c production.yml ${{ secrets.PRJ_PREFIX }} --with-registry-auth
 
             

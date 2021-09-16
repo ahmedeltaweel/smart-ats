@@ -13,9 +13,26 @@ services:
     image: smartats.azurecr.io/smart_ats_production_django
     depends_on:
       - redis
-    env_file:
-      - ./.envs/.production/.django
-      - ./.envs/.production/.postgres
+    environment:
+      CELERY_BROKER_URL
+      CELERY_FLOWER_PASSWORD
+      CELERY_FLOWER_USER
+      DEFAULT_FROM_EMAIL
+      DJANGO_AWS_ACCESS_KEY_ID
+      DJANGO_AWS_S3_REGION_NAME
+      DJANGO_AWS_SECRET_ACCESS_KEY
+      DJANGO_AWS_STORAGE_BUCKET_NAME
+      DJANGO_SECRET_KEY
+      DJANGO_SETTINGS_MODULE
+      REDIS_URL
+      SENTRY_DSN
+      IPYTHONDIR
+      POSTGRES_DB
+      POSTGRES_HOST
+      POSTGRES_PASSWORD
+      POSTGRES_PORT
+      POSTGRES_USER
+      SSLMODE
     command: /start
 
   traefik:
@@ -56,7 +73,19 @@ services:
       context: .
       dockerfile: ./compose/production/aws/Dockerfile
     image: smartats.azurecr.io/awscli
-    env_file:
-      - ./.envs/.production/.django
+    environment:
+      CELERY_BROKER_URL
+      CELERY_FLOWER_PASSWORD
+      CELERY_FLOWER_USER
+      DEFAULT_FROM_EMAIL
+      DJANGO_AWS_ACCESS_KEY_ID
+      DJANGO_AWS_S3_REGION_NAME
+      DJANGO_AWS_SECRET_ACCESS_KEY
+      DJANGO_AWS_STORAGE_BUCKET_NAME
+      DJANGO_SECRET_KEY
+      DJANGO_SETTINGS_MODULE
+      REDIS_URL
+      SENTRY_DSN
+      IPYTHONDIR
     volumes:
       - production_postgres_data_backups:/backups:z
