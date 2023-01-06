@@ -10,7 +10,7 @@ jobs:
     steps:
 
       - name: Checkout Code Repository
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v3.3.0
 
       - name: Log in to Registry
         uses: azure/docker-login@v1
